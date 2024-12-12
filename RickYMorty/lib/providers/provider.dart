@@ -6,14 +6,14 @@ import 'package:movies_app/Models/resultados.dart';
 
 class SerieProvider extends ChangeNotifier{
 
-  String _baseUrl = "rickandmortyapi.com";
-  String _language = "es-Es";
-  String _page = "1";
+  final String _baseUrl = "rickandmortyapi.com";
+  final String _language = "es-Es";
+  final String _page = "1";
 
   List<Personaje> personajes = [];
 
   SerieProvider(){
-      this.getPersonajes();
+      getPersonajes();
   }
 
   getPersonajes() async{

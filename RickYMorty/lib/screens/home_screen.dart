@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/Models/Personaje.dart';
 import 'package:movies_app/providers/provider.dart';
 import 'package:movies_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final serieProvider = Provider.of<SerieProvider>(context);
@@ -24,7 +25,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             children: [
               // Targetes principals
-              CardSwiper(),
+              CardSwiper(personajes: serieProvider.getPersonajes()),
 
               // Slider de pel·licules
               MovieSlider(),
