@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               // Usar FutureBuilder para manejar los datos asíncronos
               FutureBuilder<List<Personaje>>(
-                future: serieProvider.getPersonajes(),
+                future: serieProvider.getPersonajes('https://rickandmortyapi.com/api/character'),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());

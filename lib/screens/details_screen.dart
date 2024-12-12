@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movies_app/Models/Localizacion.dart';
 import 'package:movies_app/Models/Personaje.dart';
 import 'package:movies_app/providers/provider.dart';
+import 'package:movies_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class DetailsScreen extends StatelessWidget {
@@ -20,8 +21,8 @@ class DetailsScreen extends StatelessWidget {
               [
                 _PosterAndTitle(personaje: personaje),
                 SizedBox(height: 20),
-                _LocationDropdown(title: "Localización Original: ${personaje.origin.name}", locationUrl: personaje.origin.url),
-                _LocationDropdown(title: "Localización actual: ${personaje.location.name}", locationUrl: personaje.location.url),
+                _LocationDropdown(title: "Localización Original: ${personaje.origin?.name}", locationUrl: personaje.origin!.url),
+                _LocationDropdown(title: "Localización actual: ${personaje.location?.name}", locationUrl: personaje.location!.url),
               
               ],
             ),
@@ -136,15 +137,44 @@ class _LocationDropdown extends StatelessWidget {
               );
             } else if (snapshot.hasData) {
               final localizacion = snapshot.data!;
-              return Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'Nombre: ${localizacion.name}\nTipo: ${localizacion.type}\nDimensión: ${localizacion.dimension}',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
+              
+              // Aquí usamos el método getCharactersUrl() para obtener la URL de los personajes
+              String charactersUrl = localizacion.getCharactersURL();
+              print(charactersUrl);
+
+              // Ahora hacemos una nueva llamada a la API para obtener los personajes
+              return FutureBuilder<List<Personaje>>(
+                future: serieProvider.getPersonajes(charactersUrl),
+                builder: (context, personajesSnapshot) {
+                  if (personajesSnapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (personajesSnapshot.hasError) {
+                    print('Error al cargar los personajes: ${personajesSnapshot.error}');
+                    return Text(
+                      'Error al cargar los personajes: ${personajesSnapshot.error}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    );
+                  } else if (personajesSnapshot.hasData) {
+                    final personajes = personajesSnapshot.data!;
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Nombre: ${localizacion.name}\nTipo: ${localizacion.type}\nDimensión: ${localizacion.dimension}',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            MovieSlider(personajes: personajes),  // Asegúrate de que MovieSlider pueda recibir una lista de personajes
+                          ],
+                        ),
+                      ),
+                    );
+                  } else {
+                    return const Text('No hay personajes disponibles.');
+                  }
+                },
               );
             } else {
               return const Text('No hay datos de localización disponibles.');
@@ -155,4 +185,5 @@ class _LocationDropdown extends StatelessWidget {
     );
   }
 }
+
 

@@ -1,5 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:movies_app/Models/Personaje.dart';
+import 'package:movies_app/providers/provider.dart';
+import 'package:provider/provider.dart';
+
 class Localizacion {
     int id;
     String name;
@@ -21,8 +26,6 @@ class Localizacion {
 
     factory Localizacion.fromJson(String str) => Localizacion.fromMap(json.decode(str));
 
-    String toJson() => json.encode(toMap());
-
     factory Localizacion.fromMap(Map<String, dynamic> json) => Localizacion(
         id: json["id"],
         name: json["name"],
@@ -33,13 +36,16 @@ class Localizacion {
         created: DateTime.parse(json["created"]),
     );
 
-    Map<String, dynamic> toMap() => {
-        "id": id,
-        "name": name,
-        "type": type,
-        "dimension": dimension,
-        "residents": List<dynamic>.from(residents.map((x) => x)),
-        "url": url,
-        "created": created.toIso8601String(),
-    };
+  // Método que devuelve la URL concatenada de los personajes
+  String getCharactersURL() {
+    // Extraer solo los IDs de las URLs de los residentes
+    List<String> residentIds = residents.map((url) => url.split('/').last).toList();
+
+    // Concatenar los IDs en una sola cadena, separada por comas
+    String concatenatedIds = residentIds.join(',');
+
+    // Construir la URL completa para obtener los personajes
+    return 'https://rickandmortyapi.com/api/character/$concatenatedIds';
+  }
+
 }

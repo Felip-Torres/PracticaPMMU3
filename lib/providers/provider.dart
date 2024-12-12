@@ -8,30 +8,41 @@ import 'package:movies_app/Models/Personaje.dart';
 
 class SerieProvider extends ChangeNotifier{
 
-  final String _baseUrl = "rickandmortyapi.com";
-  final String _language = "es-Es";
-
   List<Personaje> personajes = [];
 
   SerieProvider(){
-      getPersonajes();
+      getPersonajes('https://rickandmortyapi.com/api/character');
   }
 
-  Future<List<Personaje>> getPersonajes() async {
-    final url = Uri.https(_baseUrl, '/api/character', {
-      'language' : _language
-      });
-    final response = await http.get(url);
+  Future<List<Personaje>> getPersonajes(String charactersUrl) async {
+  final response = await http.get(Uri.parse(charactersUrl));
 
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-      final List<dynamic> results = jsonResponse['results'];
+  if (response.statusCode == 200) {
+    final dynamic jsonResponse = json.decode(response.body);
+    print(jsonResponse); // Imprime la respuesta completa de la API
 
-      return results.map((item) => Personaje.fromMap(item)).toList();
-    } else {
-      throw Exception('Error al cargar personajes: ${response.statusCode}');
+    // Verificamos si la respuesta tiene el campo 'results' (paginado)
+    if (jsonResponse is Map<String, dynamic> && jsonResponse.containsKey('results')) {
+      final List<dynamic> personajesJson = jsonResponse['results'];
+      return personajesJson.map((json) => Personaje.fromMap(json)).toList();
     }
+    // Si la respuesta es una lista directa de personajes (sin la clave 'results')
+    else if (jsonResponse is List) {
+      return jsonResponse.map((json) => Personaje.fromMap(json)).toList();
+    }
+    // Si la respuesta es un solo personaje
+    else if (jsonResponse is Map<String, dynamic>) {
+      Personaje personaje = Personaje.fromMap(jsonResponse);
+      return [personaje];
+
+    } else {
+      throw Exception('Formato de respuesta inesperado');
+    }
+  } else {
+    throw Exception('Error al cargar los personajes');
   }
+}
+
 
   Future<Localizacion> getLocalizacion(String url) async {
     final uri = Uri.parse(url);
