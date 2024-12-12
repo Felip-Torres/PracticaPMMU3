@@ -17,7 +17,9 @@ class DetailsScreen extends StatelessWidget {
               [
                 _PosterAndTitle(personaje: personaje),
                 _Overview(personaje: personaje),
-                // Otros widgets que necesiten datos
+                _LocationDropdown(title: "Localización Original", location: personaje.origin),
+                _LocationDropdown(title: "Localización Actual", location: personaje.location),
+              
               ],
             ),
           ),
@@ -118,6 +120,30 @@ class _Overview extends StatelessWidget {
         textAlign: TextAlign.justify,
         style: Theme.of(context).textTheme.titleMedium,
       ),
+    );
+  }
+}
+
+class _LocationDropdown extends StatelessWidget {
+  final String title;
+  final Location location;
+
+  const _LocationDropdown({required this.title, required this.location});
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      title: Text(title),
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          child: Text(
+            'Detalles sobre la localización:${location.url}\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent volutpat.',
+            textAlign: TextAlign.justify,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+      ],
     );
   }
 }
