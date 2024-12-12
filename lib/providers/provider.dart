@@ -27,8 +27,6 @@ class SerieProvider extends ChangeNotifier{
       final jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
       final List<dynamic> results = jsonResponse['results'];
 
-      print(results);
-
       return results.map((item) => Personaje.fromMap(item)).toList();
     } else {
       throw Exception('Error al cargar personajes: ${response.statusCode}');

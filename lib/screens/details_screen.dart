@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/widgets/widgets.dart';
+import 'package:movies_app/Models/Personaje.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Canviar després per una instància de Peli
-    final String peli =
-        ModalRoute.of(context)?.settings.arguments.toString() ?? 'no-movie';
+    final personaje = ModalRoute.of(context)?.settings.arguments as Personaje;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          _CustomAppBar(),
+          _CustomAppBar(personaje: personaje),
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                _PosterAndTitile(),
-                _Overview(),
-                _Overview(),
-                CastingCards(),
+                _PosterAndTitle(personaje: personaje),
+                _Overview(personaje: personaje),
+                // Otros widgets que necesiten datos
               ],
             ),
           ),
@@ -30,13 +27,17 @@ class DetailsScreen extends StatelessWidget {
   }
 }
 
+
 class _CustomAppBar extends StatelessWidget {
+  final Personaje personaje;
+
+  const _CustomAppBar({required this.personaje});
+
   @override
   Widget build(BuildContext context) {
-    // Exactament igual que la AppBaer però amb bon comportament davant scroll
     return SliverAppBar(
-      backgroundColor: Colors.indigo,
-      expandedHeight: 200,
+      backgroundColor: Color(0xFF8dd122),
+      expandedHeight: 50,
       floating: false,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
@@ -47,25 +48,25 @@ class _CustomAppBar extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           color: Colors.black12,
           padding: const EdgeInsets.only(bottom: 10),
-          child: const Text(
-            'Títol peli',
-            style: TextStyle(fontSize: 16),
+          child: Text(
+            personaje.name,
+            style: const TextStyle(fontSize: 24),
           ),
-        ),
-        background: const FadeInImage(
-          placeholder: AssetImage('assets/loading.gif'),
-          image: NetworkImage('https://via.placeholder.com/500x300'),
-          fit: BoxFit.cover,
         ),
       ),
     );
   }
 }
 
-class _PosterAndTitile extends StatelessWidget {
+class _PosterAndTitle extends StatelessWidget {
+  final Personaje personaje;
+
+  const _PosterAndTitle({required this.personaje});
+
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -73,36 +74,28 @@ class _PosterAndTitile extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: const FadeInImage(
-              placeholder: AssetImage('assets/loading.gif'),
-              image: NetworkImage('https://via.placeholder.com/200x300'),
+            child: FadeInImage(
+              placeholder: const AssetImage('assets/loading.gif'),
+              image: NetworkImage(personaje.image),
               height: 150,
             ),
           ),
-          const SizedBox(
-            width: 20,
-          ),
+          const SizedBox(width: 20),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Títol peli',
+                personaje.name,
                 style: textTheme.headlineSmall,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
               ),
               Text(
-                'Títol original',
+                "Estado: ${personaje.status.name}.\nEspecie: ${personaje.species.name}.",
                 style: textTheme.titleMedium,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
               ),
-              Row(
-                children: [
-                  const Icon(Icons.star_outline, size: 15, color: Colors.grey),
-                  const SizedBox(width: 5),
-                  Text('Nota mitjana', style: textTheme.bodySmall),
-                ],
-              )
             ],
           )
         ],
@@ -112,15 +105,20 @@ class _PosterAndTitile extends StatelessWidget {
 }
 
 class _Overview extends StatelessWidget {
+  final Personaje personaje;
+
+  const _Overview({required this.personaje});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Text(
-        'Labore eiusmod ad reprehenderit irure eu sunt ex minim. Lorem fugiat Lorem proident duis ea cupidatat. Commodo duis culpa reprehenderit ad elit. Velit duis officia reprehenderit ullamco sint id anim officia est. Enim mollit nisi et exercitation dolore commodo. Cillum mollit laborum non nulla cillum non do reprehenderit Lorem deserunt ex eu sunt do.',
+        'Localización Original: ${personaje.origin.name}.\nLocalización actual: ${personaje.location.name}',
         textAlign: TextAlign.justify,
         style: Theme.of(context).textTheme.titleMedium,
       ),
     );
   }
 }
+

@@ -11,7 +11,7 @@ class CastingCards extends StatelessWidget {
       height: 180,
       // color: Colors.red,
       child: ListView.builder(
-          itemCount: 10,
+          itemCount: 5,
           scrollDirection: Axis.horizontal,
           itemBuilder: (BuildContext context, int index) => _CastCard()),
     );
@@ -22,7 +22,7 @@ class _CastCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       width: 110,
       height: 100,
       // color: Colors.green,
@@ -42,7 +42,7 @@ class _CastCard extends StatelessWidget {
             height: 5,
           ),
           const Text(
-            'Nom Actor',
+            'Nombre Personaje',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
