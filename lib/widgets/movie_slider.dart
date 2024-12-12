@@ -1,33 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/Models/Personaje.dart';
 
 class MovieSlider extends StatelessWidget {
-  const MovieSlider({super.key});
+  final List<Personaje> personajes;
 
-  // const MovieSlider({Key? key}) : super(key: key);
+  const MovieSlider({Key? key, required this.personajes}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: 280,
-      // color: Colors.red,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Populars',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            child: Text(
+              'Principales',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
           const SizedBox(
             height: 5,
           ),
           Expanded(
             child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 20,
-                itemBuilder: (_, int index) => const _MoviePoster()),
-          )
+              scrollDirection: Axis.horizontal,
+              itemCount: personajes.length,
+              itemBuilder: (_, int index) {
+                final personaje = personajes[index];
+                return _MoviePoster(personaje: personaje);
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -35,25 +41,29 @@ class MovieSlider extends StatelessWidget {
 }
 
 class _MoviePoster extends StatelessWidget {
-  const _MoviePoster({Key? key}) : super(key: key);
+  final Personaje personaje;
+
+  const _MoviePoster({Key? key, required this.personaje}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 130,
       height: 150,
-      // color: Colors.green,
       margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: [
           GestureDetector(
-            onTap: () => Navigator.pushNamed(context, 'details',
-                arguments: 'detalls peli'),
+            onTap: () => Navigator.pushNamed(
+              context,
+              'details',
+              arguments: personaje,
+            ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: const FadeInImage(
-                placeholder: AssetImage('assets/no-image.jpg'),
-                image: NetworkImage('https://via.placeholder.com/300x400'),
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: NetworkImage(personaje.imagenPath),
                 width: 130,
                 height: 190,
                 fit: BoxFit.cover,
@@ -63,12 +73,12 @@ class _MoviePoster extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          const Text(
-            'Star Wars: El retorno del Jedi',
+          Text(
+            personaje.name,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-          )
+          ),
         ],
       ),
     );
