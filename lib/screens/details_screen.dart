@@ -23,7 +23,6 @@ class DetailsScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 _LocationDropdown(title: "Localización Original: ${personaje.origin?.name}", locationUrl: personaje.origin!.url),
                 _LocationDropdown(title: "Localización actual: ${personaje.location?.name}", locationUrl: personaje.location!.url),
-              
               ],
             ),
           ),
@@ -130,10 +129,15 @@ class _LocationDropdown extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
+            }else if (title.contains("unknown")){
+              return Text(
+                'Localizacion desconocida',
+                style: Theme.of(context).textTheme.bodyLarge,
+              );
             } else if (snapshot.hasError) {
               return Text(
                 'Error al cargar la localización: ${snapshot.error}',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyLarge,
               );
             } else if (snapshot.hasData) {
               final localizacion = snapshot.data!;
@@ -152,7 +156,7 @@ class _LocationDropdown extends StatelessWidget {
                     print('Error al cargar los personajes: ${personajesSnapshot.error}');
                     return Text(
                       'Error al cargar los personajes: ${personajesSnapshot.error}',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     );
                   } else if (personajesSnapshot.hasData) {
                     final personajes = personajesSnapshot.data!;
