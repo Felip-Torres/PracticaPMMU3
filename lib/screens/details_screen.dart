@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/Models/Localizacion.dart';
 import 'package:movies_app/Models/Personaje.dart';
+import 'package:movies_app/providers/provider.dart';
+import 'package:provider/provider.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({super.key});
@@ -16,9 +19,9 @@ class DetailsScreen extends StatelessWidget {
             delegate: SliverChildListDelegate(
               [
                 _PosterAndTitle(personaje: personaje),
-                _Overview(personaje: personaje),
-                _LocationDropdown(title: "Localización Original", location: personaje.origin),
-                _LocationDropdown(title: "Localización Actual", location: personaje.location),
+                SizedBox(height: 20),
+                _LocationDropdown(title: "Localización Original: ${personaje.origin.name}", locationUrl: personaje.origin.url),
+                _LocationDropdown(title: "Localización actual: ${personaje.location.name}", locationUrl: personaje.location.url),
               
               ],
             ),
@@ -38,7 +41,7 @@ class _CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      backgroundColor: Color(0xFF8dd122),
+      backgroundColor: const Color(0xFF8dd122),
       expandedHeight: 50,
       floating: false,
       pinned: true,
@@ -106,42 +109,47 @@ class _PosterAndTitle extends StatelessWidget {
   }
 }
 
-class _Overview extends StatelessWidget {
-  final Personaje personaje;
-
-  const _Overview({required this.personaje});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Text(
-        'Localización Original: ${personaje.origin.name}.\nLocalización actual: ${personaje.location.name}',
-        textAlign: TextAlign.justify,
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-    );
-  }
-}
-
 class _LocationDropdown extends StatelessWidget {
   final String title;
-  final Location location;
+  final String locationUrl;
 
-  const _LocationDropdown({required this.title, required this.location});
+  const _LocationDropdown({required this.title, required this.locationUrl});
 
   @override
   Widget build(BuildContext context) {
+    final serieProvider = Provider.of<SerieProvider>(context, listen: false);
+
     return ExpansionTile(
       title: Text(title),
+      backgroundColor: const Color(0xFF499000),
+      collapsedBackgroundColor: const Color(0xFF8dd122),
       children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          child: Text(
-            'Detalles sobre la localización:${location.url}\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent volutpat.',
-            textAlign: TextAlign.justify,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+        FutureBuilder<Localizacion>(
+          future: serieProvider.getLocalizacion(locationUrl),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text(
+                'Error al cargar la localización: ${snapshot.error}',
+                style: Theme.of(context).textTheme.bodyMedium,
+              );
+            } else if (snapshot.hasData) {
+              final localizacion = snapshot.data!;
+              return Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'Nombre: ${localizacion.name}\nTipo: ${localizacion.type}\nDimensión: ${localizacion.dimension}',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+              );
+            } else {
+              return const Text('No hay datos de localización disponibles.');
+            }
+          },
         ),
       ],
     );

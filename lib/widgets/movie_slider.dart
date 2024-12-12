@@ -63,7 +63,7 @@ class _MoviePoster extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               child: FadeInImage(
                 placeholder: const AssetImage('assets/no-image.jpg'),
-                image: NetworkImage(personaje.imagenPath),
+                image: NetworkImage(personaje.image),
                 width: 130,
                 height: 190,
                 fit: BoxFit.cover,

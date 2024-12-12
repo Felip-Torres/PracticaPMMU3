@@ -29,10 +29,6 @@ class Personaje {
     required this.created,
   });
 
-  get imagenPath{
-    return image;
-  }
-
   factory Personaje.fromJson(String str) => Personaje.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());

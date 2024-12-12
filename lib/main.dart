@@ -3,7 +3,7 @@ import 'package:movies_app/providers/provider.dart';
 import 'package:movies_app/screens/screens.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(AppState());
+void main() => runApp(const AppState());
 
 class AppState extends StatelessWidget{
   const AppState({super.key});
@@ -16,7 +16,7 @@ class AppState extends StatelessWidget{
         ChangeNotifierProvider(create: (_) => SerieProvider(),
         lazy: false,)
       ],
-      child: MyApp(),
+      child: const MyApp(),
     );
   }
 }
@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
       title: 'Rick y Morty',
       initialRoute: 'home',
       routes: {
-        'home': (BuildContext context) => HomeScreen(),
-        'details': (BuildContext context) => DetailsScreen(),
+        'home': (BuildContext context) => const HomeScreen(),
+        'details': (BuildContext context) => const DetailsScreen(),
       },
       theme: ThemeData.light()
           .copyWith(appBarTheme: const AppBarTheme(color: Colors.indigo)),
