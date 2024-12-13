@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/Models/Personaje.dart';
 
-class MovieSlider extends StatelessWidget {
+//Slider de los personajes 
+class CharacterSlider extends StatelessWidget {
   final List<Personaje> personajes;
 
-  const MovieSlider({Key? key, required this.personajes}) : super(key: key);
+  const CharacterSlider({Key? key, required this.personajes}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class MovieSlider extends StatelessWidget {
               itemCount: personajes.length,
               itemBuilder: (_, int index) {
                 final personaje = personajes[index];
-                return _MoviePoster(personaje: personaje);
+                return _CharacterPoster(personaje: personaje);
               },
             ),
           ),
@@ -40,10 +41,11 @@ class MovieSlider extends StatelessWidget {
   }
 }
 
-class _MoviePoster extends StatelessWidget {
+////Widget que muestra la imagen y el nobre del personaje
+class _CharacterPoster extends StatelessWidget {
   final Personaje personaje;
 
-  const _MoviePoster({Key? key, required this.personaje}) : super(key: key);
+  const _CharacterPoster({Key? key, required this.personaje}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:movies_app/Models/Personaje.dart';
-import 'package:movies_app/providers/provider.dart';
-import 'package:provider/provider.dart';
-
 class Localizacion {
     int id;
     String name;

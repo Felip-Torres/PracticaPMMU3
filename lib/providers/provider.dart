@@ -14,36 +14,35 @@ class SerieProvider extends ChangeNotifier{
       getPersonajes('https://rickandmortyapi.com/api/character');
   }
 
+  //Devuelve la lista de personajes(Tiene en cuenta diferentes respuestas posibles)
   Future<List<Personaje>> getPersonajes(String charactersUrl) async {
-  final response = await http.get(Uri.parse(charactersUrl));
+    final response = await http.get(Uri.parse(charactersUrl));
 
-  if (response.statusCode == 200) {
-    final dynamic jsonResponse = json.decode(response.body);
-    print(jsonResponse); // Imprime la respuesta completa de la API
+    if (response.statusCode == 200) {
+      final dynamic jsonResponse = json.decode(response.body);
 
-    // Verificamos si la respuesta tiene el campo 'results' (paginado)
-    if (jsonResponse is Map<String, dynamic> && jsonResponse.containsKey('results')) {
-      final List<dynamic> personajesJson = jsonResponse['results'];
-      return personajesJson.map((json) => Personaje.fromMap(json)).toList();
-    }
-    // Si la respuesta es una lista directa de personajes (sin la clave 'results')
-    else if (jsonResponse is List) {
-      return jsonResponse.map((json) => Personaje.fromMap(json)).toList();
-    }
-    // Si la respuesta es un solo personaje
-    else if (jsonResponse is Map<String, dynamic>) {
-      Personaje personaje = Personaje.fromMap(jsonResponse);
-      return [personaje];
-
+      // Verificamos si la respuesta tiene el campo 'results'
+      if (jsonResponse is Map<String, dynamic> && jsonResponse.containsKey('results')) {
+        final List<dynamic> personajesJson = jsonResponse['results'];
+        return personajesJson.map((json) => Personaje.fromMap(json)).toList();
+      }
+      // Si la respuesta es una lista directa de personajes
+      else if (jsonResponse is List) {
+        return jsonResponse.map((json) => Personaje.fromMap(json)).toList();
+      }
+      // Si la respuesta es un solo personaje
+      else if (jsonResponse is Map<String, dynamic>) {
+        Personaje personaje = Personaje.fromMap(jsonResponse);
+        return [personaje];
+      } else {
+        throw Exception('Formato de respuesta inesperado');
+      }
     } else {
-      throw Exception('Formato de respuesta inesperado');
+      throw Exception('Error al cargar los personajes');
     }
-  } else {
-    throw Exception('Error al cargar los personajes');
   }
-}
 
-
+  //Devuelve la localizacion
   Future<Localizacion> getLocalizacion(String url) async {
     final uri = Uri.parse(url);
     final response = await http.get(uri);

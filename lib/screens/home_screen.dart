@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                         CardSwiper(personajes: personajes),
 
                         // Pasar los personajes al MovieSlider
-                        MovieSlider(personajes: personajes),
+                        CharacterSlider(personajes: personajes),
                       ],
                     );
                   }

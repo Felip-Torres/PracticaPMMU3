@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+//Clase de personaje generada con easy type
 class Personaje {
   int id;
   String name;

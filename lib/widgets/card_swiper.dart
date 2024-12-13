@@ -16,7 +16,6 @@ class CardSwiper extends StatelessWidget {
         width: double.infinity,
         // Aquest multiplicador estableix el tant per cent de pantalla ocupada 50%
         height: size.height * 0.5,
-        // color: Colors.red,
         child: Swiper(
           itemCount: 5,
           layout: SwiperLayout.STACK,
