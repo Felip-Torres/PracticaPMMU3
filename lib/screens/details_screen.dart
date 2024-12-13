@@ -159,7 +159,6 @@ class _LocationDropdown extends StatelessWidget {
                     return Align(
                       alignment: Alignment.centerLeft,
                       child: Container(
-                        padding: EdgeInsets.all(16),
                         child: Column(
                           children: [
                             Text(
